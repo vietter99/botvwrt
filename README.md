@@ -52,11 +52,11 @@ Bot Telegram chạy trực tiếp trên OpenWrt, dùng OpenAI & Gemini để:
 
 ### 🔁 Chạy như service trên OpenWrt
 
-* Có init script `/etc/init.d/telegram_bot`:
+* Có init script `telegram_bot`:
 
   * Tự start khi boot
   * Tự restart nếu crash
-  * Load config từ `/etc/config/telegram_bot`
+  * Load config từ `telegram_bot`
 * Log xem bằng:
 
   ```bash
@@ -142,11 +142,11 @@ Wizard sẽ hỏi:
 * `GEMINI_API_KEY`
 * `ADMIN_ID`
 
-* Nếu đổi token/API key → chỉ cần chạy lại wizard:
+Nếu đổi token/API key → chỉ cần chạy lại wizard:
 
-  ```bash
-  python3 /root/bot_openwrt.py config
-  ```
+```bash
+python3 /root/bot_openwrt.py config
+```
 
 Sau khi lưu cấu hình:
 
