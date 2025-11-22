@@ -115,12 +115,6 @@ Bạn cần chuẩn bị:
 3. **OpenAI API key** (nếu muốn dùng ChatGPT).
 4. **Gemini API key** (nếu muốn dùng Gemini).
 
-Tất cả sẽ được nhập qua wizard:
-
-```bash
-python3 /root/bot_openwrt.py config
-```
-
 ---
 
 ## ⚡ 3. Cài đặt nhanh (Một dòng lệnh)
