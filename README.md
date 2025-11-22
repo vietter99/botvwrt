@@ -40,17 +40,7 @@ Bot Telegram chạy trực tiếp trên OpenWrt, dùng OpenAI & Gemini để:
 
 ### 🔐 Bảo mật API key & token
 - Không hardcode token/API key trong code Python.
-- Token & key được lưu trong **`/etc/config/telegram_bot`**, bot đọc qua biến môi trường.
-- File cấu hình được khuyến nghị:
-  ```bash
-  chmod 600 /etc/config/telegram_bot
-  chown root:root /etc/config/telegram_bot
-  
-* Nếu đổi token/API key → chỉ cần chạy lại wizard:
-
-  ```bash
-  python3 /root/bot_openwrt.py config
-  ```
+- Token & key được lưu trong, bot đọc qua biến môi trường.
 
 ### 🧠 Tự tóm tắt output lệnh router
 
@@ -152,11 +142,11 @@ Wizard sẽ hỏi:
 * `GEMINI_API_KEY`
 * `ADMIN_ID`
 
-Và sẽ lưu vào:
+* Nếu đổi token/API key → chỉ cần chạy lại wizard:
 
-```text
-/etc/config/telegram_bot
-```
+  ```bash
+  python3 /root/bot_openwrt.py config
+  ```
 
 Sau khi lưu cấu hình:
 
