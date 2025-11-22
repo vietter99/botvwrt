@@ -151,7 +151,7 @@ python3 /root/bot_openwrt.py config
 Sau khi lưu cấu hình:
 
 * Bot tự restart (nếu script cài đặt cấu hình sẵn),
-* Gửi **lời chào & hướng dẫn** tới Telegram của ADMINID, không cần gõ `/start` thủ công.
+* Gửi **lời chào & hướng dẫn** tới Telegram của bạn, không cần gõ `/start` thủ công.
 
 Nếu chưa tự restart, bạn có thể:
 
@@ -225,14 +225,6 @@ rm -f /root/bot_openwrt.py
 ```
 
 (Nếu không chắc, chỉ cần disable service thôi, không cần xoá file.)
-
----
-
-## 📝 Gợi ý phát triển thêm
-
-* Giao diện web nhỏ trên LuCI để xem log bot và restart service.
-* Mapping thủ công một số lệnh “nhạy cảm” (reboot, reset Wi-Fi…) thành action riêng, không để LLM tự suy đoán.
-* Thêm chế độ “read-only” cho một số user khác ngoài ADMIN, chỉ xem thông tin, không thay đổi cấu hình.
 
 ---
 
