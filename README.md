@@ -1,4 +1,3 @@
-````markdown
 # 🤖 VWRT Bot – Trợ lý Telegram điều khiển OpenWrt bằng ChatGPT & Gemini
 
 Bot Telegram chạy trực tiếp trên OpenWrt, dùng OpenAI & Gemini để:
