@@ -74,18 +74,6 @@ Bot Telegram chạy trực tiếp trên OpenWrt, dùng OpenAI & Gemini để:
   ```bash
   logread -f
   ```
-
-### 🖼️ Hình ảnh sản phẩm (tự thêm)
-
-Bạn có thể tự chèn screenshot của mình, ví dụ:
-
-```markdown
-![VWRT Bot – màn hình chat Telegram](docs/screenshot_telegram_vwrt.png)
-![VWRT Bot – cấu hình OpenWrt](docs/screenshot_openwrt_vwrt.png)
-```
-
-Đổi đường dẫn & tên file theo ảnh thật của bạn.
-
 ---
 
 ## ⚠️ 2. Nhắc nhở & yêu cầu hệ thống
