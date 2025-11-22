@@ -73,15 +73,6 @@ Log xem bằng:
 bash
 Sao chép mã
 logread -f
-🖼️ Hình ảnh sản phẩm (tự thêm)
-Bạn có thể tự chèn screenshot của mình, ví dụ:
-
-markdown
-Sao chép mã
-![VWRT Bot – màn hình chat Telegram](docs/screenshot_telegram_vwrt.png)
-![VWRT Bot – cấu hình OpenWrt](docs/screenshot_openwrt_vwrt.png)
-Đổi đường dẫn & tên file theo ảnh thật của bạn.
-
 ⚠️ 2. Nhắc nhở & yêu cầu hệ thống
 🧩 Yêu cầu tối thiểu
 Thiết bị: Router chạy OpenWrt (khuyến nghị 19.07+ / 21.02+ / 22.03+)
