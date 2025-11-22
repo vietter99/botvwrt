@@ -10,81 +10,12 @@ INIT_DST="/etc/init.d/telegram_bot"
 
 set -e
 
-echo "[*] Kiểm tra opkg..."
-if ! command -v opkg >/dev/null 2>&1; then
-    echo "[FATAL] Không tìm thấy opkg. Đây có vẻ không phải OpenWrt hoặc hệ đã bị tùy biến."
-    exit 1
-fi
-
-# ---------- 1. python3 + pip qua opkg ----------
-
-ensure_python3_and_pip() {
-    HAVE_PY=0
-    HAVE_PIP=0
-
-    if command -v python3 >/dev/null 2>&1; then
-        HAVE_PY=1
-        echo "[*] python3 đã có."
-    else
-        echo "[*] Chưa có python3."
-    fi
-
-    if python3 -m pip -V >/dev/null 2>&1; then
-        HAVE_PIP=1
-        echo "[*] pip cho python3 đã có."
-    else
-        echo "[*] Chưa có pip cho python3."
-    fi
-
-    # Nếu cả hai đã có -> xong
-    if [ "$HAVE_PY" -eq 1 ] && [ "$HAVE_PIP" -eq 1 ]; then
-        echo "[*] python3 + pip đầy đủ, bỏ qua cài thêm."
-        return 0
-    fi
-
-    echo "[*] Đang cài python3 và python3-pip bằng opkg..."
-    opkg update || true
-    opkg install python3 python3-pip || {
-        echo "[ERROR] Không cài được python3/python3-pip, dừng."
-        exit 1
-    }
-
-    # Kiểm tra lại
-    if ! command -v python3 >/dev/null 2>&1; then
-        echo "[FATAL] python3 vẫn không tồn tại sau khi cài."
-        exit 1
-    fi
-
-    if ! python3 -m pip -V >/dev/null 2>&1; then
-        echo "[FATAL] pip cho python3 vẫn không dùng được sau khi cài."
-        exit 1
-    fi
-}
-
-# ---------- 2. requests qua pip ----------
-
-ensure_requests() {
-    echo "[*] Kiểm tra module requests trong python3..."
-    if python3 - << 'PY' >/dev/null 2>&1
-try:
-    import requests
-except ImportError:
-    raise SystemExit(1)
-PY
-    then
-        echo "[*] Python module 'requests' đã có, bỏ qua."
-        return 0
-    fi
-
-    echo "[*] Chưa có 'requests', đang cài bằng pip..."
-    # --no-cache-dir + tắt check version cho nhẹ
-    python3 -m pip install --no-cache-dir --disable-pip-version-check requests || {
-        echo "[ERROR] Không cài được module 'requests' bằng pip."
-        exit 1
-    }
-
-    echo "[*] Đã cài xong 'requests'."
-}
+echo "=== VWRT BOT INSTALLER (rút gọn) ==="
+echo
+echo "Lưu ý:"
+echo "  - YÊU CẦU đã có sẵn: python3, python3-pip, và module python 'requests'."
+echo "  - Nếu chưa có, tự cài thủ công trước khi chạy bot."
+echo
 
 # ---------- Hàm tải file (curl hoặc wget) ----------
 
@@ -106,41 +37,89 @@ download_to() {
 
 # ================== BẮT ĐẦU CÀI ĐẶT ==================
 
-echo "=== Bước 1: Đảm bảo python3 + pip ==="
-ensure_python3_and_pip
-
-echo
-echo "=== Bước 2: Cài 'requests' bằng pip ==="
-ensure_requests
-
-echo
-echo "=== Bước 3: Tải bot_openwrt.py từ GitHub ==="
+echo "=== Bước 1: Tải bot_openwrt.py từ GitHub ==="
 download_to "$REPO_RAW/bot_openwrt.py" "$BOT_DST"
 chmod 700 "$BOT_DST"
 
 echo
-echo "=== Bước 4: Tải init script telegram_bot từ GitHub ==="
-download_to "$REPO_RAW/telegram_bot.init" "$INIT_DST"
+echo "=== Bước 2: Tạo init script /etc/init.d/telegram_bot ==="
 
-# Loại bỏ CRLF nếu có (nếu bạn edit trên Windows)
+cat << 'EOF_INIT' > "$INIT_DST"
+#!/bin/sh /etc/rc.common
+
+START=99
+STOP=10
+USE_PROCD=1
+
+SCRIPT="/root/bot_openwrt.py"
+PYTHON_BIN="/usr/bin/python3"
+
+. /lib/functions.sh
+
+load_bot_config() {
+    config_load telegram_bot
+    config_get TELEGRAM_TOKEN main telegram_token
+    config_get OPENAI_API_KEY main openai_key
+    config_get GEMINI_API_KEY main gemini_key
+    config_get ADMIN_ID       main admin_id
+}
+
+start_service() {
+    load_bot_config
+
+    if [ -z "$TELEGRAM_TOKEN" ]; then
+        logger -t telegram_bot "TELEGRAM_TOKEN chưa cấu hình, không start bot"
+        return 1
+    fi
+
+    procd_open_instance
+
+    procd_set_param env \
+        TELEGRAM_TOKEN="$TELEGRAM_TOKEN" \
+        OPENAI_API_KEY="$OPENAI_API_KEY" \
+        GEMINI_API_KEY="$GEMINI_API_KEY" \
+        ADMIN_ID="$ADMIN_ID"
+
+    procd_set_param command "$PYTHON_BIN" -u "$SCRIPT"
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+
+    procd_close_instance
+}
+
+stop_service() {
+    :
+}
+EOF_INIT
+
+# Loại bỏ CRLF nếu lỡ bị dính
 sed -i 's/\r$//' "$INIT_DST"
 chmod 755 "$INIT_DST"
 
 echo
-echo "=== Bước 5: Enable service telegram_bot ==="
+echo "=== Bước 3: Enable service telegram_bot ==="
 /etc/init.d/telegram_bot enable || true
 
 echo
+echo "=== Bước 4: Chạy wizard cấu hình lần đầu ==="
+if command -v python3 >/dev/null 2>&1; then
+    python3 /root/bot_openwrt.py config
+    echo
+    echo "=== Bước 5: Restart service telegram_bot ==="
+    /etc/init.d/telegram_bot restart || true
+else
+    echo "[CẢNH BÁO] Không tìm thấy python3, không chạy được wizard."
+    echo "Bạn cần tự chạy sau khi cài python3:"
+    echo "  python3 /root/bot_openwrt.py config"
+    echo "  /etc/init.d/telegram_bot restart"
+fi
+
+echo
 echo "================= DONE ================="
-echo "Đã tải:"
+echo "Đã tạo:"
 echo "  - $BOT_DST"
 echo "  - $INIT_DST (service: telegram_bot)"
-echo
-echo "Bước tiếp theo (lần đầu cấu hình):"
-echo "  python3 /root/bot_openwrt.py config"
-echo
-echo "Wizard cấu hình xong sẽ TỰ GỌI:"
-echo "  /etc/init.d/telegram_bot restart"
+echo "Bot đã được cấu hình (nếu python3 có sẵn) và service đã restart."
 echo "========================================="
 EOF
 
