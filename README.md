@@ -45,8 +45,7 @@ Bot Telegram chạy trực tiếp trên OpenWrt, dùng OpenAI & Gemini để:
   ```bash
   chmod 600 /etc/config/telegram_bot
   chown root:root /etc/config/telegram_bot
-````
-
+  
 * Nếu đổi token/API key → chỉ cần chạy lại wizard:
 
   ```bash
