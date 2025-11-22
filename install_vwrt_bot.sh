@@ -1,4 +1,3 @@
-cat << 'EOF' > /root/install_vwrt_bot.sh
 #!/bin/sh
 
 # ====== CẤU HÌNH ======
@@ -10,7 +9,7 @@ INIT_DST="/etc/init.d/telegram_bot"
 
 set -e
 
-echo "=== VWRT BOT INSTALLER (rút gọn) ==="
+echo "=== VWRT BOT INSTALLER ==="
 echo
 echo "Lưu ý:"
 echo "  - YÊU CẦU đã có sẵn: python3, python3-pip, và module python 'requests'."
@@ -121,6 +120,7 @@ echo "  - $BOT_DST"
 echo "  - $INIT_DST (service: telegram_bot)"
 echo "Bot đã được cấu hình (nếu python3 có sẵn) và service đã restart."
 echo "========================================="
-EOF
+echo "Dọn dẹp: xóa script cài đặt $(basename "$0")"
 
-chmod +x /root/install_vwrt_bot.sh
+# TỰ XÓA BẢN THÂN
+rm -f "$0"
