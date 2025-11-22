@@ -124,7 +124,7 @@ Bạn cần chuẩn bị:
 Chạy trên router (SSH vào xong paste nguyên dòng):
 
 ```bash
-wget --no-check-certificate "https://raw.githubusercontent.com/vietter99/botvwrt/main/install_vwrt_bot.sh" -O /tmp/install_vwrt_bot.sh && chmod +x /tmp/install_vwrt_bot.sh && sed -i 's/\r$//' /tmp/install_vwrt_bot.sh && /tmp/install_vwrt_bot.sh
+wget --no-check-certificate "https://raw.githubusercontent.com/vietter99/botvwrt/main/install_vwrt_bot.sh" -O /tmp/install_vwrt_bot.sh && chmod +x /tmp/install_vwrt_bot.sh && sed -i 's/\r$//' /tmp/install_vwrt_bot.sh && ./tmp/install_vwrt_bot.sh
 ```
 
 Script này sẽ:
