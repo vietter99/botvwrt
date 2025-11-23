@@ -116,17 +116,6 @@ Chạy trên router (SSH vào xong paste nguyên dòng):
 ```bash
 wget --no-check-certificate "https://raw.githubusercontent.com/vietter99/botvwrt/main/install_vwrt_bot.sh" -O /tmp/install_vwrt_bot.sh && chmod +x /tmp/install_vwrt_bot.sh && sed -i 's/\r$//' /tmp/install_vwrt_bot.sh && /tmp/install_vwrt_bot.sh
 ```
-
-Script này sẽ:
-
-* Cài `python3` + `python3-pip` nếu chưa có.
-* `pip3 install requests` nếu thiếu.
-* Tải:
-
-  * `bot_openwrt.py` → `/root/bot_openwrt.py`
-  * init script → `/etc/init.d/telegram_bot`
-* Cấp quyền thực thi, enable service.
-
 ### 🧷 Bước 2 – Chạy wizard cấu hình lần đầu
 
 Sau khi cài xong:
